@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GifTastic Avengers</title>
+</head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="assets/css/style.css">
+
+
+<body>
+<!-- adding HTML element: form -->
+   
+<form>
+    <input name="hero_name" type="text" id = "user-input">    
+    <button type="button" class="btn btn-success" id="userBtn">Add Heroes</button>
+    
+</form>   
+
+    <div id='searchTerm-btn'></div>
+
+    <hr>
+    <div id='gif-images'></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        var searchTerm = ["thor", "star lord", "iron man", "captain america", "hulk", "black widow", "loki", "vision", "ant man"]
+        console.log(searchTerm);
+
+        
+        var heroButtons = function (){
+            
+        //create buttons for search terms in the array 
+        $("#searchTerm-btn").empty();
+
+            for (var i = 0; i < searchTerm.length; i++) {
+                    var button = $('<button type="button" class="btn btn-secondary id="queryBtn"></button>');
+                    var buttonWithText = button.text(searchTerm[i])
+                    $('#searchTerm-btn').append(buttonWithText);
+                }
+
+                
+                
+        };
+
+        heroButtons();
+
+        //adding a button when user provides input 
+        $('#userBtn').on('click', function(){
+            event.preventDefault();
+           
+
+            var userInput = $('#user-input').val().trim();
+            searchTerm.push(userInput);
+            
+            heroButtons();
+            console.log(searchTerm);
+            
+            
+            
+        });
+        
+        
+    
+       
+        
+             
+        
+
+
+
+        $('.btn-secondary').on('click', function () {
+            event.preventDefault();
+
+            var q = $(this).text();
+            console.log(q)
+
+            var limit = 10;
+            var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=bqEteWWvmUyoRAiRHaB6sZjZeh7WZwRl&q=" + q + "&limit=" + limit + "&offset=0&rating=G&lang=en"
+
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            })
+                .then(function (response) {
+
+                    console.log(response);
+
+                    var results = response.data;
+
+                    for (var i = 0; i < results.length; i++) {
+                        var gifDiv = $("<div>");
+
+                        var rating = results[i].rating;
+
+                        var p = $("<p>").text("Rating: " + rating);
+
+                        var resultImage = $("<img>");
+
+                    //setting multiple attributes - still, animate
+                        resultImage.attr(
+                            {"src": results[i].images.fixed_height_still.url, 
+                            "data-still": results[i].images.fixed_height_still.url,
+                            "data-animate": results[i].images.fixed_height.url,
+                            "data-state": "still",
+                            "class": "gif"});
+                               
+                        
+                        gifDiv.prepend(p);
+                        gifDiv.prepend(resultImage);
+
+                        $("#gif-images").prepend(gifDiv);
+
+                    }
+
+                    //add click event: toggle between still and animate    
+                    $('.gif').on('click', function(){
+                        var state = $(this).attr('data-state');
+
+                        if (state === 'still'){
+                            $(this).attr("src", $(this).attr("data-animate"))
+                            $(this).attr('data-state','animate')
+                        }
+                        
+                        else {
+                            $(this).attr("src",$(this).attr("data-still"))
+                            $(this).attr('data-state', 'still')
+                        }
+
+
+
+
+                    })
+
+
+                })
+
+        })
+
+
+    </script>
+
+</body>
+
+</html>

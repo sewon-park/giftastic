@@ -9,11 +9,16 @@
 </head>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css?family=Anton" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 
 
 <body>
 <!-- adding HTML element: form -->
+<header>
+<h1>Search Your Favorite Avengers' Giphy Images</h1>
+
+</header>
    
 <form>
     <input name="hero_name" type="text" id = "user-input">    
@@ -58,22 +63,15 @@
             searchTerm.push(userInput);
             
             heroButtons();
-            console.log(searchTerm);
-            
+            console.log(searchTerm);            
             
             
         });
         
         
-    
-       
-        
-             
-        
-
-
-
-        $('.btn-secondary').on('click', function () {
+            
+    //api call request when the hero button is clicked
+        $(document).on('click','.btn-secondary', function () {
             event.preventDefault();
 
             var q = $(this).text();
